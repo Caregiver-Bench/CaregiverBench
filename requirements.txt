@@ -1,0 +1,4 @@
+jsonschema>=4.20
+# Optional — only needed for live model runs / judging
+anthropic>=0.40
+openai>=1.50

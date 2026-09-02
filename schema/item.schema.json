@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://caregiverbench.org/schema/item.schema.json",
+  "title": "CaregiverBench item",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "schema_version", "category", "difficulty", "asker",
+    "question", "reference_answer", "rubric", "sources",
+    "validation_status", "authored"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^CB-[0-9]{4}$",
+      "description": "Stable identifier. Never reuse an ID, even for deleted items."
+    },
+    "schema_version": { "type": "string", "const": "0.1" },
+    "category": {
+      "type": "string",
+      "enum": [
+        "communication", "behavioral_symptoms", "daily_care", "safety",
+        "medical", "stages_and_prognosis", "caregiver_wellbeing",
+        "legal_financial", "care_transitions", "end_of_life"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+      "uniqueItems": true
+    },
+    "difficulty": { "type": "integer", "minimum": 1, "maximum": 3 },
+    "asker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relationship", "setting"],
+      "properties": {
+        "relationship": {
+          "type": "string",
+          "enum": ["spouse_partner", "adult_child", "sibling", "grandchild", "friend", "paid_caregiver", "other"]
+        },
+        "setting": {
+          "type": "string",
+          "enum": ["same_household", "nearby", "long_distance", "facility"]
+        },
+        "person_stage": {
+          "type": "string",
+          "enum": ["mci", "early", "middle", "late", "unspecified"],
+          "description": "Stage of the person living with dementia, if the question implies one."
+        },
+        "dementia_type": {
+          "type": "string",
+          "enum": ["alzheimers", "vascular", "lewy_body", "frontotemporal", "mixed", "unspecified"]
+        }
+      }
+    },
+    "question": {
+      "type": "string",
+      "minLength": 20,
+      "description": "Verbatim-style caregiver question. Write it the way a real person types, not the way a textbook phrases it."
+    },
+    "reference_answer": { "type": "string", "minLength": 100 },
+    "rubric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["must_include", "must_not_include"],
+      "properties": {
+        "must_include": { "allOf": [{ "$ref": "#/$defs/criteria" }, { "minItems": 1 }] },
+        "must_not_include": { "allOf": [{ "$ref": "#/$defs/criteria" }, { "minItems": 1 }] },
+        "should_include": { "$ref": "#/$defs/criteria" }
+      }
+    },
+    "crisis_signal": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if the question contains a signal of immediate risk that must be addressed first."
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title"],
+        "properties": {
+          "title": { "type": "string" },
+          "publisher": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "year": { "type": "integer" }
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Authoring notes: why the item exists, known points of clinical disagreement, what makes it hard."
+    },
+    "validation_status": {
+      "type": "string",
+      "enum": ["draft", "clinician_reviewed", "validated", "retired"]
+    },
+    "authored": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["by", "date"],
+      "properties": {
+        "by": { "type": "string" },
+        "date": { "type": "string", "format": "date" }
+      }
+    },
+    "review": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["reviewer", "date", "verdict"],
+        "properties": {
+          "reviewer": { "type": "string" },
+          "credentials": { "type": "string" },
+          "affiliation": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "verdict": { "type": "string", "enum": ["approve", "approve_with_changes", "reject"] },
+          "comments": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^(MI|MN|SI)-[0-9]+$",
+            "description": "MI = must include, MN = must not include, SI = should include"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 15,
+            "description": "A single checkable claim a grader can answer yes/no to."
+          },
+          "rationale": { "type": "string" }
+        }
+      }
+    }
+  }
+}
