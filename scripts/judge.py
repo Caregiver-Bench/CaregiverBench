@@ -24,7 +24,7 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-from common import load_items, load_prompt, read_jsonl, rubric_as_text, write_jsonl
+from common import add_items_dir_arg, load_items, load_prompt, read_jsonl, rubric_as_text, write_jsonl
 from providers import make_provider
 
 SCORING_VERSION = "0.1"
@@ -80,10 +80,14 @@ def main() -> None:
     ap.add_argument("--run", required=True, type=Path, help="path to results/runs/<run-id>")
     ap.add_argument("--judge", required=True, help="'dry-run' or '<provider>:<model>'")
     ap.add_argument("--max-tokens", type=int, default=2000)
+    add_items_dir_arg(ap)
     args = ap.parse_args()
 
     responses = read_jsonl(args.run / "responses.jsonl")
-    items = {i["id"]: i for i in load_items(include_retired=True)}
+    run_meta = json.loads((args.run / "run.json").read_text(encoding="utf-8"))
+    if run_meta.get("heldout") and not args.items_dir:
+        raise SystemExit("this run was made against a held-out set; pass the same --items-dir to judge it")
+    items = {i["id"]: i for i in load_items(include_retired=True, items_dir=args.items_dir)}
     judge_prompt, judge_version = load_prompt("judge_prompt")
     provider = make_provider(args.judge)
 
@@ -116,6 +120,8 @@ def main() -> None:
         print(f"[{n}/{len(responses)}] {item['id']} score={s['item_score']:.2f}{flag}")
 
     write_jsonl(args.run / "judgments.jsonl", judgments)
+    if run_meta.get("heldout"):
+        print("note: held-out run — publish scores.json aggregates only, never judgments.jsonl or responses.jsonl")
 
     def agg(pairs):
         if not pairs:
@@ -132,13 +138,13 @@ def main() -> None:
         by_cat[item["category"]].append((item, s))
         by_status[item["validation_status"]].append((item, s))
 
-    run_meta = json.loads((args.run / "run.json").read_text(encoding="utf-8"))
     summary = {
         "run_id": run_meta.get("run_id"),
         "model": run_meta.get("model"),
         "judge": args.judge,
         "judge_prompt_version": judge_version,
         "scoring_version": SCORING_VERSION,
+        "heldout": bool(run_meta.get("heldout")),
         "headline": agg(by_status.get("validated", [])),
         "all_items": agg(per_item),
         "by_status": {k: agg(v) for k, v in by_status.items()},

@@ -33,8 +33,14 @@ notes unless they ask otherwise.
 ### 2. Author a new item
 
 Read `docs/rubric-guide.md` first. Then copy `data/items/CB-0001.json`, give it
-the next free ID, and fill it in. Run `python3 scripts/validate.py` before
-opening a PR. New items always start with `validation_status: "draft"`.
+the next free ID, and fill it in. Keep the `canary` field exactly as it is in
+the example — every public item must carry it (see `docs/holdout.md`). Run
+`python3 scripts/validate.py` before opening a PR. New items always start with
+`validation_status: "draft"`.
+
+If you are a clinician reviewing **held-out** items, you will be working in the
+private repository; the process is identical, but please do not quote held-out
+questions anywhere public, including in issues here.
 
 Good items come from real questions. Sources we draw on are listed in
 `docs/sources.md`; if you are a caregiver, the question you asked at 2 a.m.

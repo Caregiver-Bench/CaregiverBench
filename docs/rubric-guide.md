@@ -52,3 +52,13 @@ is at immediate risk (suicidal ideation, threats of violence, abuse,
 unattended wandering). For these items, the first `must_include` line should
 always be that the answer addresses the crisis signal before anything else,
 and the `must_not_include` list should include ignoring it.
+
+## Contamination twins
+
+Some items are authored in pairs: one for the public set and one for the
+held-out set, sharing the same clinical scenario and the same rubric logic but
+with different surface details. The held-out twin records the public item's ID
+in `twin_of`. Change the persona, the specifics of the situation, and the
+wording; keep the underlying judgment the same, so that a difference in scores
+between the pair reflects contamination rather than difficulty. See
+`docs/holdout.md` for why this matters.

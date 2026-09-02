@@ -18,7 +18,7 @@ import re
 import time
 from datetime import datetime, timezone
 
-from common import RESULTS_DIR, load_items, load_prompt, write_jsonl
+from common import RESULTS_DIR, add_items_dir_arg, load_items, load_prompt, write_jsonl
 from providers import make_provider
 
 
@@ -34,9 +34,10 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--max-tokens", type=int, default=1500)
     ap.add_argument("--sleep", type=float, default=0.0, help="seconds between calls (rate limiting)")
+    add_items_dir_arg(ap)
     args = ap.parse_args()
 
-    items = load_items()
+    items = load_items(items_dir=args.items_dir)
     if args.status:
         items = [i for i in items if i["validation_status"] in args.status]
     if args.limit:
@@ -48,7 +49,7 @@ def main() -> None:
     provider = make_provider(args.model)
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    run_id = f"{stamp}-{slug(args.model)}"
+    run_id = f"{stamp}-{slug(args.model)}" + ("-heldout" if args.items_dir else "")
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
 
@@ -81,6 +82,8 @@ def main() -> None:
         "items": len(rows),
         "errors": sum(1 for r in rows if r["error"]),
         "status_filter": args.status,
+        "items_dir": str(args.items_dir) if args.items_dir else "data/items",
+        "heldout": bool(args.items_dir),
         "started": stamp,
     }, indent=2) + "\n", encoding="utf-8")
     print(f"\nwrote {run_dir.relative_to(RESULTS_DIR.parent)}")

@@ -12,7 +12,7 @@ import json
 import sys
 from collections import Counter
 
-from common import ITEMS_DIR, SCHEMA_PATH, load_items
+from common import CANARY, ITEMS_DIR, SCHEMA_PATH, add_items_dir_arg, load_items
 
 try:
     import jsonschema
@@ -20,10 +20,19 @@ except ImportError:  # pragma: no cover
     jsonschema = None
 
 
-def authoring_checks(item: dict) -> tuple[list[str], list[str]]:
+def authoring_checks(item: dict, heldout: bool = False) -> tuple[list[str], list[str]]:
     """Rules the schema can't express. Returns (errors, warnings)."""
     errors, warnings = [], []
     rubric = item["rubric"]
+
+    # Canary: required on public items, must be absent on held-out items (docs/holdout.md).
+    if heldout:
+        if "canary" in item:
+            errors.append("held-out items must not carry the canary string")
+    elif item.get("canary") != CANARY:
+        errors.append("public items must carry the canary string (see docs/holdout.md)")
+    if item.get("twin_of") and not heldout:
+        warnings.append("twin_of is set on a public item; twins normally point from held-out to public")
 
     # Criterion IDs must match their section and be unique within the item.
     prefix = {"must_include": "MI", "must_not_include": "MN", "should_include": "SI"}
@@ -67,6 +76,9 @@ def authoring_checks(item: dict) -> tuple[list[str], list[str]]:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--strict", action="store_true", help="treat warnings as errors")
+    ap.add_argument("--heldout", action="store_true",
+                    help="validate as a held-out set: canary must be absent, twin_of allowed")
+    add_items_dir_arg(ap)
     args = ap.parse_args()
 
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -81,9 +93,9 @@ def main() -> int:
     else:
         print("warning: jsonschema not installed; skipping schema validation (pip install jsonschema)")
 
-    items = load_items(include_retired=True)
+    items = load_items(include_retired=True, items_dir=args.items_dir)
     if not items:
-        print(f"no items found in {ITEMS_DIR}")
+        print(f"no items found in {args.items_dir or ITEMS_DIR}")
         return 1
 
     total_errors = total_warnings = 0
@@ -97,7 +109,7 @@ def main() -> int:
                 errs.append(f"schema: {where}: {e.message}")
         if ids[item["id"]] > 1:
             errs.append(f"duplicate id {item['id']}")
-        e2, w2 = authoring_checks(item)
+        e2, w2 = authoring_checks(item, heldout=args.heldout)
         errs += e2
         warns += w2
 
