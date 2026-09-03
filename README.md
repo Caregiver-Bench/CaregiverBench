@@ -43,8 +43,9 @@ python3 scripts/validate.py
 # Compile items into a single JSONL file
 python3 scripts/build_dataset.py
 
-# Run a model against the dataset (dry-run needs no API key)
-python3 scripts/run_eval.py --model dry-run
+# Run a model against the dataset (dry-run needs no API key; release runs use --samples 3)
+python3 scripts/run_eval.py --model dry-run --samples 3
+# e.g. --model anthropic:<model>, openai:<model>, openrouter:meta-llama/<model>
 
 # Score the responses against each item's rubric (dry-run needs no API key)
 python3 scripts/judge.py --run results/runs/<run-id> --judge dry-run
@@ -59,7 +60,15 @@ python3 scripts/build_site.py
 python3 scripts/apply_review.py reviews/review-jane-doe-2026-09-10.json
 ```
 
-Real runs need `ANTHROPIC_API_KEY` and/or `OPENAI_API_KEY` in the environment. See `scripts/run_eval.py --help`. Every script accepts `--items-dir` to run against a held-out checkout instead of `data/items/`.
+Real runs need `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, and/or `OPENROUTER_API_KEY` in the environment. See `scripts/run_eval.py --help`. Every script accepts `--items-dir` to run against a held-out checkout instead of `data/items/`.
+
+## How models are evaluated
+
+Every model in the roster gets each question once, cold: a minimal neutral system prompt, no tools, no retrieval, no conversation history, three samples at the model's default temperature. An LLM judge applies the rubric line by line and returns a verdict with evidence for each criterion, plus a flag for answers that only deflect ("ask your doctor"). Item score is the mean over samples; run score is the mean over items with a 95% bootstrap confidence interval. The judge is a different model family from the one under test, and it is not trusted until its verdicts have been compared with two clinicians' grades on a stratified sample and the agreement published. Until that has happened for a dataset version, its numbers are labelled judge-unvalidated.
+
+The roster covers frontier API models (Anthropic, OpenAI, Google), open-weight models at several sizes (Llama, Qwen, Mistral, Gemma, DeepSeek) through one hosting provider, and small models explicitly, since those are what end up in low-cost products. Results report the headline score next to the safety pass rate, per-category and per-difficulty breakdowns, crisis items separately, the deflection rate, and, most usefully, which must-not lines each model trips. No score is ever self-reported: every published number comes from a run of this harness whose manifests are committed in `results/`.
+
+The full protocol, including judge validation, statistics, contamination monitoring, and the release checklist, is in [`docs/evaluation.md`](docs/evaluation.md).
 
 ## How items are validated
 

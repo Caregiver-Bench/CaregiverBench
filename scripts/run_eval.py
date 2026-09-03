@@ -3,12 +3,14 @@
 
 Usage:
   python3 scripts/run_eval.py --model dry-run
-  python3 scripts/run_eval.py --model anthropic:claude-sonnet-4-5
+  python3 scripts/run_eval.py --model anthropic:claude-sonnet-4-5 --samples 3
+  python3 scripts/run_eval.py --model openrouter:meta-llama/llama-3.3-70b-instruct --samples 3
   python3 scripts/run_eval.py --model openai:gpt-4o --status validated --limit 10
 
-Each run writes results/runs/<run-id>/responses.jsonl plus run.json describing
-exactly what was run (model, prompt version, dataset hash) so it can be
-reproduced. Judge the run afterwards with scripts/judge.py.
+Release runs use --samples 3 at the model's default temperature (see
+docs/evaluation.md). Each run writes results/runs/<run-id>/responses.jsonl
+(one row per item per sample) plus run.json describing exactly what was run so
+it can be reproduced. Judge the run afterwards with scripts/judge.py.
 """
 from __future__ import annotations
 
@@ -26,9 +28,23 @@ def slug(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
 
 
+def call_with_retries(fn, tries: int = 3):
+    """Retry API errors with backoff; content (refusals etc.) is never retried."""
+    last = None
+    for attempt in range(tries):
+        try:
+            return fn(), None, attempt
+        except Exception as e:  # noqa: BLE001
+            last = f"{type(e).__name__}: {e}"
+            time.sleep(2 ** attempt)
+    return "", last, tries
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--model", required=True, help="'dry-run' or '<provider>:<model>'")
+    ap.add_argument("--samples", type=int, default=1, help="responses per item (release runs: 3)")
+    ap.add_argument("--temperature", type=float, default=None, help="omit to use the model's default")
     ap.add_argument("--status", nargs="*", default=None,
                     help="only items with these validation statuses (default: all non-retired)")
     ap.add_argument("--limit", type=int, default=None)
@@ -53,34 +69,44 @@ def main() -> None:
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
 
-    rows = []
-    for n, item in enumerate(items, 1):
-        t0 = time.time()
-        try:
-            answer = provider.complete(system_prompt, item["question"], max_tokens=args.max_tokens)
-            error = None
-        except Exception as e:  # keep going; record the failure
-            answer, error = "", f"{type(e).__name__}: {e}"
-        rows.append({
-            "item_id": item["id"],
-            "category": item["category"],
-            "validation_status": item["validation_status"],
-            "model": args.model,
-            "answer": answer,
-            "error": error,
-            "latency_s": round(time.time() - t0, 2),
-        })
-        print(f"[{n}/{len(items)}] {item['id']} {'ERROR ' + error if error else 'ok'}")
-        if args.sleep:
-            time.sleep(args.sleep)
+    rows, retries = [], 0
+    total = len(items) * args.samples
+    n = 0
+    for item in items:
+        for s in range(args.samples):
+            n += 1
+            t0 = time.time()
+            answer, error, attempts = call_with_retries(
+                lambda: provider.complete(system_prompt, item["question"], max_tokens=args.max_tokens, temperature=args.temperature)
+            )
+            retries += attempts if error else attempts
+            rows.append({
+                "item_id": item["id"],
+                "sample": s,
+                "category": item["category"],
+                "validation_status": item["validation_status"],
+                "model": args.model,
+                "answer": answer,
+                "error": error,
+                "latency_s": round(time.time() - t0, 2),
+            })
+            print(f"[{n}/{total}] {item['id']} s{s} {'ERROR ' + error if error else 'ok'}")
+            if args.sleep:
+                time.sleep(args.sleep)
 
     write_jsonl(run_dir / "responses.jsonl", rows)
     (run_dir / "run.json").write_text(json.dumps({
         "run_id": run_id,
         "model": args.model,
+        "date": stamp[:8],
         "system_prompt_version": prompt_version,
-        "items": len(rows),
+        "items": len(items),
+        "samples": args.samples,
+        "temperature": args.temperature,
+        "max_tokens": args.max_tokens,
+        "responses": len(rows),
         "errors": sum(1 for r in rows if r["error"]),
+        "api_retries": retries,
         "status_filter": args.status,
         "items_dir": str(args.items_dir) if args.items_dir else "data/items",
         "heldout": bool(args.items_dir),

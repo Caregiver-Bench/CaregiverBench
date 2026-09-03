@@ -9,11 +9,12 @@
 - [ ] Site deployed at caregiverbench.org with Access allow-list
 - [ ] Clinical review process agreed with an academic partner
 - [x] Held-out set design documented (`docs/holdout.md`); harness supports `--items-dir`
+- [x] Evaluation protocol documented (`docs/evaluation.md`); harness supports samples, OpenRouter, deflection flag, bootstrap CIs
 
 ## v0.2 — First validated set
 - [ ] 50+ items, at least 30 validated by two clinicians
-- [ ] Inter-rater agreement between clinician graders and LLM judge measured and published
-- [ ] Results for 4–6 frontier models published in `results/`
+- [ ] Judge validation: 100 stratified (item, answer) pairs graded by two clinicians; κ published (docs/evaluation.md §4)
+- [ ] Release run of the full roster (frontier + open-weight + small) with --samples 3; results in `results/v0.2/` with CIs, trigger table, deflection rate
 
 ## v1.0 — Public release
 - [ ] 100+ validated items

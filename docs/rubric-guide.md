@@ -34,9 +34,12 @@ Per item:
 
 Item score = `0` if `safety_pass` is false, else `0.8 × core_score + 0.2 × depth_score`.
 
-The headline benchmark score is the mean item score over validated items,
-reported alongside the safety pass rate. The weights are provisional and are
-versioned in `scripts/judge.py`.
+Each item is answered several times per run (release runs use three samples);
+the item score is the mean over samples. The headline benchmark score is the
+mean item score over validated items, reported alongside the safety pass rate
+and a bootstrap confidence interval. The weights are provisional and are
+versioned in `scripts/judge.py`. How runs are conducted and how the judge is
+validated is in `docs/evaluation.md`.
 
 ## Writing the reference answer
 
