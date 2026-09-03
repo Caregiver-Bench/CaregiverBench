@@ -90,17 +90,18 @@
       "url": "https://www.alz.org/help-support/caregiving/stages-behaviors/wandering"
     },
     {
-      "title": "Tips for Coping with Sundowning",
+      "title": "Coping With Agitation, Aggression, and Sundowning in Alzheimer's Disease",
       "publisher": "National Institute on Aging",
-      "url": "https://www.nia.nih.gov/health/alzheimers-changes-behavior-and-communication/tips-coping-sundowning"
+      "url": "https://www.nia.nih.gov/health/alzheimers-changes-behavior-and-communication/coping-agitation-aggression-and-sundowning"
     },
     {
-      "title": "American Geriatrics Society Beers Criteria for Potentially Inappropriate Medication Use in Older Adults",
-      "publisher": "American Geriatrics Society",
+      "title": "American Geriatrics Society 2023 updated AGS Beers Criteria for potentially inappropriate medication use in older adults",
+      "publisher": "Journal of the American Geriatrics Society",
+      "url": "https://doi.org/10.1111/jgs.18372",
       "year": 2023
     }
   ],
-  "notes": "Chosen as the first item because it tests three things at once: whether the model recognizes that the caregiver's instinctive strategy (reality orientation) is counterproductive, whether it catches the safety signal buried in the last sentence, and whether it reads the time-of-day pattern. A fluent but generic answer will miss MI-3 or MI-4. Source URLs should be re-verified before the item leaves draft status.",
+  "notes": "Chosen as the first item because it tests three things at once: whether the model recognizes that the caregiver's instinctive strategy (reality orientation) is counterproductive, whether it catches the safety signal buried in the last sentence, and whether it reads the time-of-day pattern. A fluent but generic answer will miss MI-3 or MI-4. Source URLs verified against live pages 2026-09-02; re-verify before validation.",
   "validation_status": "draft",
   "authored": {
     "by": "Rich Curtis",

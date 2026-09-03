@@ -61,7 +61,7 @@ def authoring_checks(item: dict, heldout: bool = False) -> tuple[list[str], list
     # Crisis items must lead with the crisis.
     if item.get("crisis_signal"):
         first = rubric["must_include"][0]["text"].lower()
-        if "crisis" not in first and "immediate" not in first and "first" not in first:
+        if not any(w in first for w in ("crisis", "immediate", "urgent", "first", "safety")):
             warnings.append("crisis_signal is true but MI-1 does not appear to address the crisis first")
 
     # Soft size guidance.

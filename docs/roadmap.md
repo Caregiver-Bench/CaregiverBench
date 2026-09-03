@@ -2,8 +2,9 @@
 
 ## v0.1 — "Something to react to"
 - [x] Repo, schema, harness skeleton
-- [ ] 25–30 draft items across all ten categories
-- [ ] Dry-run of harness end to end
+- [x] 30 draft items, three per category (citations verified against live pages; clinical review pending)
+- [x] Dry-run of harness end to end
+- [x] Review packet export for reviewers without GitHub
 - [ ] Clinical review process agreed with an academic partner
 - [x] Held-out set design documented (`docs/holdout.md`); harness supports `--items-dir`
 

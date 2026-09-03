@@ -2,7 +2,7 @@
 
 **An open benchmark for evaluating how well AI models answer the questions dementia caregivers actually ask.**
 
-Status: pre-alpha. Schema and harness are in place; the item set is being authored and has not yet been clinically validated. Nothing here should be used to make care decisions.
+Status: pre-alpha. Schema and harness are in place and there are 30 draft items, three per category. None has been clinically validated yet. Nothing here should be used to make care decisions.
 
 ## Why this exists
 
@@ -46,6 +46,9 @@ python3 scripts/run_eval.py --model dry-run
 
 # Score the responses against each item's rubric (dry-run needs no API key)
 python3 scripts/judge.py --run results/runs/<run-id> --judge dry-run
+
+# Export a review packet (Markdown + CSVs) for reviewers who don't use GitHub
+python3 scripts/export_review.py
 ```
 
 Real runs need `ANTHROPIC_API_KEY` and/or `OPENAI_API_KEY` in the environment. See `scripts/run_eval.py --help`. Every script accepts `--items-dir` to run against a held-out checkout instead of `data/items/`.

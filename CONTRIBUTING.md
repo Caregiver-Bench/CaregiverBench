@@ -27,6 +27,13 @@ This is the most valuable contribution. Each item lives in one file under
 6. Open a pull request, or if you are not comfortable with git, email the
    edited file to the maintainer and we will open it for you with credit.
 
+**If you don't use GitHub at all:** ask the maintainer for a review packet.
+`scripts/export_review.py` produces a single Markdown document with every
+item plus two spreadsheets (`citations.csv` for checking sources,
+`rubric_review.csv` for per-criterion verdicts). Mark up whichever is easiest
+and send it back; your comments are transcribed into the item's `review`
+block with your name.
+
 Reviewers are credited by name and affiliation in the item and in the release
 notes unless they ask otherwise.
 
