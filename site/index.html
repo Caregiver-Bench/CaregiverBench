@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CaregiverBench</title>
+<meta name="description" content="An open benchmark for evaluating how well AI models answer the questions dementia caregivers actually ask.">
+<style>
+:root{--bg:#f7f6f3;--panel:#fff;--ink:#1d1d1b;--muted:#6b6a66;--line:#e2e0da;--accent:#2c5f8a;--soft:#f0eee9}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--panel:#1f1f1d;--ink:#ecebe6;--muted:#a3a19a;--line:#333330;--accent:#7fb2dd;--soft:#272725}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:720px;margin:0 auto;padding:56px 24px 80px}
+h1{font-size:40px;line-height:1.1;margin:0 0 6px;font-weight:700;letter-spacing:-.01em}
+.tag{font-size:19px;color:var(--muted);margin:0 0 28px}
+.status{display:inline-block;font-size:13px;border:1px solid var(--line);border-radius:12px;padding:2px 10px;color:var(--muted);margin-bottom:28px}
+h2{font-size:22px;margin:40px 0 10px}
+p{margin:0 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:18px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card b{display:block;margin-bottom:4px}
+.card span{font-size:14px;color:var(--muted)}
+.cats{columns:2;column-gap:24px;font-size:15px;color:var(--muted);padding-left:18px;margin:8px 0 0}
+.cta{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600;margin:6px 10px 6px 0}
+.cta.secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+.warn{background:var(--soft);border-left:3px solid var(--accent);padding:10px 14px;border-radius:6px;font-size:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CaregiverBench</h1>
+  <p class="tag">An open benchmark for how well AI models answer the questions dementia caregivers actually ask.</p>
+  <span class="status">Pre-alpha · 30 draft items · clinical validation in progress</span>
+
+  <p>More than eleven million Americans provide unpaid care for someone living with dementia, and a growing share of them turn to AI chatbots at 2 a.m. when no nurse line is open. Their questions mix medical facts, behavioral strategy, safety, ethics, and their own exhaustion. A response that sounds confident can still be wrong in ways that matter: recommending reality orientation for someone who asks to "go home," suggesting an antihistamine for sleep, or missing the signal that a caregiver is in crisis.</p>
+  <p>No public, clinically grounded benchmark measures this. General medical QA benchmarks test recall of textbook facts; they do not test whether a model gives a frightened spouse advice a dementia specialist would endorse. CaregiverBench is meant to fill that gap.</p>
+
+  <h2>How it works</h2>
+  <div class="grid">
+    <div class="card"><b>Realistic questions</b><span>Written the way caregivers actually ask them, with a persona: spouse or adult child, same house or long distance, early or late stage.</span></div>
+    <div class="card"><b>Rubrics, not answer keys</b><span>Each item lists what a sound answer must include, must not include, and should include. Models are scored on the rubric, so there is no single right wording.</span></div>
+    <div class="card"><b>Safety first</b><span>A single must-not violation zeroes the item. Crisis items check whether a model addresses risk before anything else.</span></div>
+    <div class="card"><b>Clinical validation</b><span>Every item shows its review status. Only items validated by two independent clinicians count toward the headline score.</span></div>
+  </div>
+
+  <h2>Ten categories</h2>
+  <ul class="cats">
+    <li>Communication</li><li>Behavioral symptoms</li><li>Daily care</li><li>Safety</li><li>Medical</li>
+    <li>Stages and prognosis</li><li>Caregiver wellbeing</li><li>Legal and financial</li><li>Care transitions</li><li>End of life</li>
+  </ul>
+
+  <h2>Get involved</h2>
+  <p>We especially need dementia-care clinicians, social workers, and experienced caregivers to review items. Reviewers use a simple web tool; no technical background or GitHub account is needed. Reviewers are credited by name unless they prefer otherwise.</p>
+  <p>
+    <a class="cta" href="./review.html">Open the review tool</a>
+    <a class="cta secondary" href="https://github.com/caregiverbench/CaregiverBench">Source and data on GitHub</a>
+  </p>
+  <p class="warn">CaregiverBench is a research instrument for evaluating AI systems. Nothing in it is medical advice, and it must not be used to guide the care of any individual.</p>
+
+  <footer>
+    Maintained by Rich Curtis · Code MIT, data CC BY 4.0 · <a href="mailto:rich@caregiverbench.org">Contact</a>
+  </footer>
+</div>
+</body>
+</html>

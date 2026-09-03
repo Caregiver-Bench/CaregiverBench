@@ -28,6 +28,8 @@ scripts/            Validation, model runner, judge, and dataset build
 prompts/            System and judge prompts (versioned — changes affect scores)
 docs/               Taxonomy, rubric authoring guide, sources, held-out set design, roadmap
 results/            Model outputs and scores (committed per release, not per run)
+site/               caregiverbench.org: landing page and the browser-based review tool
+reviews/            Review bundles exported from the tool and applied to items (provenance)
 ```
 
 ## Quick start
@@ -49,6 +51,12 @@ python3 scripts/judge.py --run results/runs/<run-id> --judge dry-run
 
 # Export a review packet (Markdown + CSVs) for reviewers who don't use GitHub
 python3 scripts/export_review.py
+
+# Build the website (validates, compiles the dataset, copies it under site/data/)
+python3 scripts/build_site.py
+
+# Apply a review bundle exported from the review tool
+python3 scripts/apply_review.py reviews/review-jane-doe-2026-09-10.json
 ```
 
 Real runs need `ANTHROPIC_API_KEY` and/or `OPENAI_API_KEY` in the environment. See `scripts/run_eval.py --help`. Every script accepts `--items-dir` to run against a held-out checkout instead of `data/items/`.
@@ -64,6 +72,10 @@ Only *validated* items count toward the headline score. Draft and reviewed items
 ## Held-out set
 
 This repository is the public development set. A separate **held-out set**, kept in a private repository under the `caregiverbench` organization and authored to the same standard, will become the headline score once it is large enough. Held-out results are published only as aggregates, together with a content hash of the exact dataset used, so released items can later be verified. Every public data file carries a canary string so vendors can filter it from training corpora. Details, including rotation and contamination twins, are in [`docs/holdout.md`](docs/holdout.md).
+
+## Reviewing items without touching JSON
+
+`site/review.html` is a single-file, dependency-free web tool for reviewers. It shows each item with its rubric and sources, lets the reviewer edit text in place (changes are tracked, not applied), record a verdict on every rubric line, check every citation, and give an overall verdict with comments. Work is saved in the browser; **Export review** produces a small JSON bundle that the maintainer applies with `scripts/apply_review.py`, which shows each proposed change as a diff, records the review in the item, and promotes `validation_status` when the rules are met. The tool is hosted at caregiverbench.org behind an email allow-list (see [`docs/hosting.md`](docs/hosting.md)) and also works opened from a laptop. Reviewer instructions are in [`docs/reviewer-guide.md`](docs/reviewer-guide.md).
 
 ## Contributing
 

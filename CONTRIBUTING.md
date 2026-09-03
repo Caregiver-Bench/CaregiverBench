@@ -9,8 +9,10 @@ busy. This guide is written to make your time count.
 
 ### 1. Review an item (clinicians and experienced caregivers)
 
-This is the most valuable contribution. Each item lives in one file under
-`data/items/`. To review one:
+This is the most valuable contribution. **The easiest way is the review
+tool** at https://caregiverbench.org/review.html — no GitHub account or JSON
+involved; see `docs/reviewer-guide.md`. If you prefer working in the repo,
+each item lives in one file under `data/items/`. To review one by hand:
 
 1. Open the file. Read the `question`, then the `rubric`, then the
    `reference_answer`.

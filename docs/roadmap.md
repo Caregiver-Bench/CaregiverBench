@@ -5,6 +5,8 @@
 - [x] 30 draft items, three per category (citations verified against live pages; clinical review pending)
 - [x] Dry-run of harness end to end
 - [x] Review packet export for reviewers without GitHub
+- [x] Browser review tool (site/review.html) + apply_review.py; hosting on Cloudflare Pages + Access documented
+- [ ] Site deployed at caregiverbench.org with Access allow-list
 - [ ] Clinical review process agreed with an academic partner
 - [x] Held-out set design documented (`docs/holdout.md`); harness supports `--items-dir`
 
