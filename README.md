@@ -4,11 +4,35 @@
 
 Status: pre-alpha. Schema and harness are in place and there are 30 draft items, three per category. None has been clinically validated yet. Nothing here should be used to make care decisions.
 
-## Why this exists
+## Why this should exist
 
-More than 11 million Americans provide unpaid care for someone living with dementia, and a growing share of them turn to AI chatbots for help at 2 a.m. when no nurse line is open. The questions they ask are hard: they mix medical facts, behavioral strategy, safety, ethics, and the caregiver's own exhaustion. A response that sounds confident and reasonable can still be wrong in ways that matter — recommending reality orientation for someone who asks to "go home," suggesting an antihistamine for sleep, or missing the signal that a caregiver is in crisis.
+### The problem
 
-There is no public, clinically grounded benchmark that measures this. General medical QA benchmarks test recall of textbook facts; they do not test whether a model gives a frightened spouse advice that a dementia specialist would endorse. CaregiverBench is meant to fill that gap.
+Nearly 13 million Americans provide unpaid care for someone living with dementia, and a growing share of them turn to AI chatbots for help at 2 a.m. when no nurse line is open. The questions they ask are hard: they mix medical facts, behavioral strategy, safety, ethics, and the caregiver's own exhaustion. A response that sounds confident and reasonable can still be wrong in ways that matter — recommending reality orientation for someone who asks to "go home," suggesting an antihistamine for sleep, or missing the signal that a caregiver is in crisis.
+
+Nobody currently measures this. The published studies of chatbot answers to caregiver questions are small (dozens of questions), graded by hand by a few clinicians, cover one model at one point in time, and cannot be re-run when the next model ships. Their conclusions — broadly reassuring on general information, weaker on clinical specifics and on anticipating what comes next — are useful, but they are snapshots, not an instrument. Meanwhile the models change every few months, and the products built on them (including the small open-weight models that end up in low-cost caregiving apps) are shipped without any domain-specific safety evidence at all.
+
+### Why existing benchmarks don't cover it
+
+General medical QA benchmarks test recall of textbook facts against a single correct answer. Caregiver questions rarely have one. The right answer depends on who is asking, on which stage of the disease, and on noticing what the question doesn't say; the failure modes are omissions and confidently harmful suggestions rather than factual errors. Scoring that needs a rubric — what a clinically sound answer *must* say, *must not* say, and *should* say — written and checked by people who do this work, and a scoring method that rewards substantive help rather than a reflexive "ask your doctor." None of the existing public benchmarks provide that for dementia care, and the structure here is general enough to be copied for other caregiving domains.
+
+### What the research community gets
+
+**A clinician-validated dataset, openly licensed.** Every item is a realistic question with a persona, a reference answer, a three-tier rubric, cited sources, a difficulty rating, and a visible validation status with reviewer provenance. The data is CC BY 4.0, so it can be reused for evaluation, fine-tuning, product QA, or as seed material for other benchmarks.
+
+**A reproducible measurement instrument, not a leaderboard screenshot.** The harness records the exact model string, prompt version, dataset hash, sample count, and error count for every run, publishes 95% bootstrap confidence intervals, and reports paired comparisons so that small differences are called "not distinguishable" rather than ranked. The goal is that anyone with API keys can rerun a release and get the same numbers.
+
+**Diagnostic output, not just a score.** Beyond the headline number, each release reports the safety pass rate, per-category and per-difficulty breakdowns, crisis items separately, the deflection rate, and — usually the most useful part — a table of which `must_not_include` lines each model trips. That is the information a model developer or a product team can act on.
+
+**A validated LLM judge, with the validation data published.** Before any release the judge is calibrated against two clinicians on a stratified sample of graded answers, and the judge–clinician and clinician–clinician agreement figures (Cohen's κ per criterion type) are published. That corpus of clinician-graded (item, answer) pairs is itself a rare artifact for anyone studying LLM-as-judge in a clinical domain.
+
+**A contamination-aware design that others can copy.** A private held-out set with a published content hash, item "twins" split across the public and held-out pools to make training-set leakage measurable, a canary string in every data file, and a rotation scheme that keeps the development set fresh. Small clinical benchmarks are especially vulnerable to contamination; this is a worked example of how to build one anyway.
+
+**Coverage of the models people actually deploy.** The roster deliberately includes open-weight models at several sizes and small (~7–9B) models alongside the frontier APIs, so the results speak to the question builders in aging care actually face: how much safety do you give up for cost.
+
+### Who it is for
+
+Researchers studying AI in health and aging, who need a standing measure rather than a one-off study. Model developers, who need to know what their models get wrong in this domain before a caregiver finds out. Teams building caregiver-facing products, who need evidence for the model choice they are making. Clinicians and caregiver advocates, who deserve a public, independent answer to "is it safe to ask a chatbot this?" that no vendor gets to write for itself.
 
 ## What it measures
 
