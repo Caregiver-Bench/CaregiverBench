@@ -27,7 +27,8 @@ each item lives in one file under `data/items/`. To review one by hand:
    `comments`. Be blunt. Notes like "we stopped recommending this in 2019" are
    exactly what we need.
 6. Open a pull request, or if you are not comfortable with git, email the
-   edited file to the maintainer and we will open it for you with credit.
+   edited file to rich@caregiverbench.org and we will open it for you with
+   credit.
 
 **If you don't use GitHub at all:** ask the maintainer for a review packet.
 `scripts/export_review.py` produces a single Markdown document with every

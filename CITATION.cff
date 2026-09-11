@@ -8,4 +8,5 @@ authors:
 version: 0.0.1
 date-released: 2026-09-02
 url: "https://caregiverbench.org"
+repository-code: "https://github.com/Caregiver-Bench/CaregiverBench"
 license: CC-BY-4.0

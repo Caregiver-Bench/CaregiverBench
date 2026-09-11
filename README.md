@@ -104,7 +104,7 @@ Only *validated* items count toward the headline score. Draft and reviewed items
 
 ## Held-out set
 
-This repository is the public development set. A separate **held-out set**, kept in a private repository under the `caregiverbench` organization and authored to the same standard, will become the headline score once it is large enough. Held-out results are published only as aggregates, together with a content hash of the exact dataset used, so released items can later be verified. Every public data file carries a canary string so vendors can filter it from training corpora. Details, including rotation and contamination twins, are in [`docs/holdout.md`](docs/holdout.md).
+This repository is the public development set. A separate **held-out set**, kept in a private repository under the `Caregiver-Bench` GitHub organization and authored to the same standard, will become the headline score once it is large enough. Held-out results are published only as aggregates, together with a content hash of the exact dataset used, so released items can later be verified. Every public data file carries a canary string so vendors can filter it from training corpora. Details, including rotation and contamination twins, are in [`docs/holdout.md`](docs/holdout.md).
 
 ## Reviewing items without touching JSON
 
@@ -120,4 +120,4 @@ Code is released under the [MIT License](LICENSE). The dataset (everything under
 
 ## Maintainer
 
-Rich Curtis · [caregiverbench.org](https://caregiverbench.org)
+Rich Curtis · [caregiverbench.org](https://caregiverbench.org) · rich@caregiverbench.org

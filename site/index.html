@@ -37,7 +37,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);font-si
   <p>Nearly thirteen million Americans provide unpaid care for someone living with dementia, and a growing share of them turn to AI chatbots at 2 a.m. when no nurse line is open. Their questions mix medical facts, behavioral strategy, safety, ethics, and their own exhaustion. A response that sounds confident can still be wrong in ways that matter: recommending reality orientation for someone who asks to "go home," suggesting an antihistamine for sleep, or missing the signal that a caregiver is in crisis.</p>
   <p>No public, clinically grounded benchmark measures this. General medical QA benchmarks test recall of textbook facts; they do not test whether a model gives a frightened spouse advice a dementia specialist would endorse. CaregiverBench is meant to fill that gap.</p>
 
-  <h2>How it works</h2>
+  <h2>What an item looks like</h2>
   <div class="grid">
     <div class="card"><b>Realistic questions</b><span>Written the way caregivers actually ask them, with a persona: spouse or adult child, same house or long distance, early or late stage.</span></div>
     <div class="card"><b>Rubrics, not answer keys</b><span>Each item lists what a sound answer must include, must not include, and should include. Models are scored on the rubric, so there is no single right wording.</span></div>
@@ -51,11 +51,15 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);font-si
     <li>Stages and prognosis</li><li>Caregiver wellbeing</li><li>Legal and financial</li><li>Care transitions</li><li>End of life</li>
   </ul>
 
+  <h2>What happens with the data</h2>
+  <p>The questions are the raw material; the benchmark is what runs on top of them. Once at least thirty items have been validated by two clinicians, every model on the roster (frontier APIs, open-weight models at several sizes, and the small models that end up in low-cost apps) is asked each question cold, three times, with no tools or coaching. A judge model applies the rubric line by line, but only after its verdicts have been checked against two clinicians' grades and the agreement published. Results report the headline score next to the safety pass rate, with confidence intervals, and, most usefully, a table of exactly which harmful suggestions each model made. A private held-out set, a published content hash, and paired "twin" items keep the score honest as public questions leak into training data.</p>
+  <p><a class="cta secondary" href="./how-it-works.html">How the benchmark works →</a></p>
+
   <h2>Get involved</h2>
   <p>We especially need dementia-care clinicians, social workers, and experienced caregivers to review items. Reviewers use a simple web tool; no technical background or GitHub account is needed. Reviewers are credited by name unless they prefer otherwise.</p>
   <p>
     <a class="cta" href="./review.html">Open the review tool</a>
-    <a class="cta secondary" href="https://github.com/caregiverbench/CaregiverBench">Source and data on GitHub</a>
+    <a class="cta secondary" href="https://github.com/Caregiver-Bench/CaregiverBench">Source and data on GitHub</a>
   </p>
   <p class="warn">CaregiverBench is a research instrument for evaluating AI systems. Nothing in it is medical advice, and it must not be used to guide the care of any individual.</p>
 

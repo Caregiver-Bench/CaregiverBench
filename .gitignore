@@ -8,3 +8,11 @@ results/runs/
 *.egg-info/
 review/
 site/data/
+
+# Local notes and Claude session artifacts (never published)
+Claude outputs/
+.claude/settings.local.json
+
+# Cloudflare Wrangler
+.wrangler/
+node_modules/

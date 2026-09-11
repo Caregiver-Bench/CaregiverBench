@@ -18,7 +18,7 @@
 
 ## v1.0 — Public release
 - [ ] 100+ validated items
-- [ ] Private held-out repository created under the `caregiverbench` org; ~40 validated items, ~25% with public twins
+- [ ] Private held-out repository created under the `Caregiver-Bench` org; ~40 validated items, ~25% with public twins
 - [ ] Held-out manifest hash published with results; headline score switches to held-out
 - [ ] Leaderboard on caregiverbench.org
 - [ ] Methods write-up

@@ -7,7 +7,8 @@ per item, and you can stop and resume at any time.
 
 Open **https://caregiverbench.org/review.html**. Enter your email address; a
 one-time code is sent to you. There is no account and no password. If you see
-"access denied," your address isn't on the list yet — email the maintainer.
+"access denied," your address isn't on the list yet — email
+rich@caregiverbench.org.
 
 The first time, click **Reviewer** (top right) and enter your name,
 credentials, and affiliation. They're attached to your review and you'll be
@@ -47,8 +48,8 @@ keys or the arrows at the bottom to move between items.
 ## Sending it back
 
 When you've done as many items as you're going to do (all of them, or just a
-few), click **Export review**. A small file downloads; email it to the
-maintainer. Nothing you do in the tool changes the dataset directly: the
+few), click **Export review**. A small file downloads; email it to
+rich@caregiverbench.org. Nothing you do in the tool changes the dataset directly: the
 maintainer looks at every proposed change and applies it, and your review is
 recorded in the item with your name.
 

@@ -5,7 +5,7 @@ ladder, and one harness:
 
 - **Public set** — this repository. Used for development, published in full,
   reviewed in public pull requests.
-- **Held-out set** — a private repository under the `caregiverbench` GitHub
+- **Held-out set** — a private repository under the `Caregiver-Bench` GitHub
   organization containing only `data/items/`. Used for the headline score once
   it is large enough (see *Sizing*). Reviewed by clinicians in private PRs.
 
