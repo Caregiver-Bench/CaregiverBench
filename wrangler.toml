@@ -5,15 +5,17 @@
 name = "caregiverbench"
 compatibility_date = "2026-09-01"
 
-# Serve the built site/ folder as static files. build_site.py regenerates
-# site/data/ from data/items/ and refuses to build if any item is invalid.
-[assets]
-directory = "./site"
-
 # Serve only on the custom domain. The zone is already on Cloudflare, so
 # `wrangler deploy` creates the DNS record and certificate itself.
+# These must stay above [assets]: in TOML every key after a table header
+# belongs to that table, and Wrangler ignores them there.
 workers_dev = false
 preview_urls = false
 routes = [
   { pattern = "caregiverbench.org", custom_domain = true },
 ]
+
+# Serve the built site/ folder as static files. build_site.py regenerates
+# site/data/ from data/items/ and refuses to build if any item is invalid.
+[assets]
+directory = "./site"
